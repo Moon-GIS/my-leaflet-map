@@ -1,0 +1,291 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c13",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.37435, 22.594406]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Nalin sarkar street"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c12",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.371686, 22.593318]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Hatibagan"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c11",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.385278, 22.594828]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Telenga bagan"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c10",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.372176, 22.584996]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Chaltabagan"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0f",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.368853, 22.590948]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Kashi Bose lane"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0e",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.412345, 22.583395]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "FD Block Saltlake"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0d",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.406623, 22.583006]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Laboni Estate"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0c",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.366073, 22.521104]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Ekdalia Evergreen"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0b",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.365839, 22.522061]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Singhi park"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c0a",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.346793, 22.510236]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Mudiali"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c09",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.349168, 22.510885]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Shib Mandir"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c08",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.353519, 22.518905]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Deshapriya park"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c07",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.35543, 22.51909]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Tridhara Sammilani"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c06",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.355569, 22.516486]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Ballygunj cultural"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c05",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.361825, 22.517733]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Hindusthan Park Sarbojanin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c04",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.343736, 22.517858]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Badamtala Ashar Sangha"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c03",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.368888, 22.508076]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Babubagan"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c02",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.365581, 22.504595]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Jodhpur park"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c01",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.366048, 22.604771]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Bagbajar Sarbojanin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7c00",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.361423, 22.599183]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Kamartuli park sarbojanin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7bff",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.358634, 22.588648]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Pathuriaghata Pacher pally"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7bfe",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.357273, 22.595038]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Ahiritola"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "points_geom.fid-768304cb_19a446d15c6_-7bfd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [88.380918, 22.462628]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "Name": "Naba Durga"
+      }
+    }
+  ],
+  "totalFeatures": 23,
+  "numberMatched": 23,
+  "numberReturned": 23,
+  "timeStamp": "2025-11-03T11:29:05.575Z",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PostGIS Points on Leaflet Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // Initialize map
+    var map = L.map('map').setView([22.97, 78.65], 5);
+
+    // Add OpenStreetMap basemap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Fetch WFS GeoJSON from GeoServer
+    //const wfsUrl = "http://localhost:8080/geoserver/new_ws/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=new_ws:points_geom&outputFormat=application/json";
+
+    fetch('data.geojson')
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        // Add points as Leaflet markers (no popups)
+        L.geoJSON(data, {
+          pointToLayer: function(feature, latlng) {
+            return L.marker(latlng, {
+              icon: L.icon({
+                iconUrl: "dugga1.png",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41]
+              })
+            }).bindPopup(`<b>${feature.properties.Name || "No Name"}</b>`);
+
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error("WFS load error:", err));
+  </script>
+</body>
+</html>
