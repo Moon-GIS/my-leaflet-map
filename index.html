@@ -24,6 +24,32 @@
 
     // Fetch WFS GeoJSON from GeoServer
     //const wfsUrl = "http://localhost:8080/geoserver/new_ws/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=new_ws:points_geom&outputFormat=application/json";
+const imageMap = {
+  "Ahiritola":"AHIRITOLA.jpg",
+  "Bagbajar Sarbojanin":"BAGBAJAR SARBOJANIN.jpg",
+  "Babubagan":"BABUBAGAN.jpg",
+  "Badamtala Ashar Sangha":"BADAMTALA ASAR SANGHA.jpg",
+  "Ballygunj cultural":"BALLYGUNJ CULTURAL.jpg",
+  "Chaltabagan":"CHALTA BAGAN.jpg",
+  "Deshapriya park":"DESHAPRIYA PARK.jpg",
+  "Ekdalia Evergreen":"EKDALIA EVERGREEN.jpg",
+  "FD Block Saltlake":"FD BLOCK, SALTLAKE.jpg",
+  "Hatibagan":"HATIBAGAN.jpg",
+  "Hindusthan Park Sarbojanin":"HINDUSTHAN PARK.jpg",
+  "Jodhpur park":"JODHPUR PARK.jpg",
+  "Kashi Bose lane":"KASHI BOSE LANE.jpg",
+  "Kamartuli park sarbojanin":"KUMARTULI SARBOJANIN.jpg",
+  "Laboni Estate":"LABONI ESTATE.jpg",
+  "Mudiali":"MUDIALI CLUB.jpg",
+  "Naba Durga":"NABA DURGA.jpg",
+  "Nalin sarkar street":"NALIN SARKAR STREET.jpg",
+  "Pathuriaghata Pacher pally":"PATHURIAGHATA PACHER PALLI.jpg",
+  "Shib Mandir":"SHIB MANDIR.jpg",
+  "Telenga bagan":"TELENGA BAGAN.jpg",
+  "Tridhara Sammilani":"TRIDHARA SAMMILANI.jpg",
+  "Singhi park":"SINGHI PARK.jpg"
+};
+
 
     fetch('data.geojson')
       .then(response => {
@@ -49,3 +75,4 @@
   </script>
 </body>
 </html>
+
