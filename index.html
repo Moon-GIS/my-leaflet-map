@@ -66,7 +66,7 @@ const imageMap = {
                 iconSize: [25, 41],
                 iconAnchor: [12, 41]
               })
-            }).bindPopup(`<b>${feature.properties.Name || "No Name"}</b>`);
+            }).bindPopup(`<b>${feature.properties.Name || "No Name"}</b><img src="${imageMap[feature.properties.Name]}" width="200" style="border:1px solid #ccc; margin-top:5px;">`);
 
           }
         }).addTo(map);
@@ -75,4 +75,5 @@ const imageMap = {
   </script>
 </body>
 </html>
+
 
