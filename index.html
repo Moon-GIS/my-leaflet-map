@@ -6,22 +6,238 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    #map { height: 100vh; width: 100%; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #header {
+      width: 100%;
+      background: #b30000;
+      padding: 10px 20px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Top controls bar */
+    #topControls {
+      flex: 0 0 auto;
+      padding: 10px 20px;
+      background: #f3f3f3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #topControls select,
+    #topControls input {
+      padding: 7px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #999;
+      min-width: 180px;
+    }
+
+    #main {
+      flex: 1 1 auto;
+      display: flex;
+      min-height: 0;
+    }
+
+    #map {
+      flex: 2;
+      height: 100%;
+    }
+
+    #infoPanel {
+      flex: 1;
+      max-width: 380px;
+      border-left: 1px solid #ddd;
+      padding: 12px 15px;
+      overflow-y: auto;
+      background: #ffffff;
+    }
+
+    #infoTitle {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 20px;
+      color: #b30000;
+    }
+
+    #infoMeta {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    #infoMeta span {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f0f0f0;
+    }
+
+    #infoDescTitle,
+    #infoHistoryTitle {
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    #infoDesc,
+    #infoHistory {
+      font-size: 14px;
+      line-height: 1.4;
+      text-align: justify;
+    }
+
+    /* Carousel styles */
+    #carouselWrapper {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    #carouselContainer {
+      position: relative;
+      display: inline-block;
+    }
+
+    #carouselImage {
+      width: 260px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    #prevBtn { left: -14px; }
+    #nextBtn { right: -14px; }
+
+    #carouselCaption {
+      font-size: 13px;
+      margin-top: 4px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <div id="map"></div>
+  <div id="header">Durga Puja Locations - Kolkata WebGIS</div>
 
-  <script>
-    // Initialize map
-    var map = L.map('map').setView([22.97, 78.65], 5);
+  <!-- Top controls centered horizontally -->
+  <div id="topControls">
+    <select id="locationSelect">
+      <option value="">-- Select Puja Location --</option>
+    </select>
 
-    // Add OpenStreetMap basemap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    <input type="text" id="searchBox" placeholder="Search Puja by name...">
 
+    <select id="zoneFilter">
+      <option value="All">Zone: All</option>
+      <option value="North">Zone: North</option>
+      <option value="South">Zone: South</option>
+      <option value="Central">Zone: Central</option>
+      <option value="Salt Lake">Zone: Salt Lake</option>
+    </select>
+
+    <select id="ratingFilter">
+      <option value="All">Rating: All</option>
+      <option value="3">Rating ≥ 3.0</option>
+      <option value="4">Rating ≥ 4.0</option>
+      <option value="4.5">Rating ≥ 4.5</option>
+    </select>
+
+    <select id="awardFilter">
+      <option value="All">Award: All</option>
+      <option value="Yes">Award Winners</option>
+      <option value="No">Non Award</option>
+    </select>
+  </div>
+
+  <div id="main">
+    <div id="map"></div>
+
+    <!-- Right info sidebar -->
+    <div id="infoPanel">
+      <h2 id="infoTitle">Select a Puja location</h2>
+      <div id="infoMeta">
+        <span>Zone: -</span>
+        <span>Rating: -</span>
+        <span>Award: -</span>
+      </div>
+
+      <div id="infoDescTitle">Description</div>
+      <div id="infoDesc">
+        Choose any Durga Puja from the dropdown or by clicking on the map markers to see details, history and images here.
+      </div>
+
+      <div id="infoHistoryTitle">History</div>
+      <div id="infoHistory">
+        This panel will show sample history text for the selected Puja pandal.
+      </div>
+
+      <div id="carouselWrapper">
+        <div id="carouselContainer">
+          <button class="carousel-btn" id="prevBtn">‹</button>
+          <img id="carouselImage" src="" alt="Puja image">
+          <button class="carousel-btn" id="nextBtn">›</button>
+        </div>
+        <div id="carouselCaption">Image slideshow (sample carousel using same image)</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Initialize map
+  var map = L.map('map').setView([22.57, 88.36], 11);
+
+  // Basemap layers
+  var baseLayers = {
+    "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19}),
+    "Google Satellite": L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    "Google Terrain": L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    "Dark Mode": L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {maxZoom: 20})
+  };
+
+  baseLayers["OpenStreetMap"].addTo(map);
+  L.control.layers(baseLayers).addTo(map);
     // Fetch WFS GeoJSON from GeoServer
     //const wfsUrl = "http://localhost:8080/geoserver/new_ws/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=new_ws:points_geom&outputFormat=application/json";
 const imageMap = {
@@ -50,33 +266,432 @@ const imageMap = {
   "Singhi park":"SINGHI PARK.jpg"
 };
 
+   // ---------- SAMPLE META DATA (Zone, Rating, Award, Description, History) ----------
+  const pandalInfo = {
+    "Ahiritola": {
+      zone: "North",
+      rating: 4.4,
+      awardWinner: true,
+      awardTitle: "Best Lighting 2023",
+      description: "Ahiritola Sarbojanin Durga Puja is known for its creative themes and crowd-friendly layout along the northern ghats of Kolkata.",
+      history: "Started as a small neighbourhood puja, Ahiritola gradually turned into a major crowd puller after the 1990s with innovative concepts."
+    },
+    "Bagbajar Sarbojanin": {
+      zone: "North",
+      rating: 4.8,
+      awardWinner: true,
+      awardTitle: "Traditional Puja Award 2022",
+      description: "Bagbazar Sarbojanin is one of the oldest Durga Pujas in Kolkata, famous for its traditional style and riverfront location.",
+      history: "With a history of over a century, this puja reflects classic Bengali rituals and has seen visits from many eminent personalities."
+    },
+    "Babubagan": {
+      zone: "South",
+      rating: 4.3,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Babubagan Club hosts a popular theme-based puja in South Kolkata, often focusing on social messages.",
+      history: "Since early 2000s, Babubagan has experimented with bold pandal designs and interactive installations."
+    },
+    "Badamtala Ashar Sangha": {
+      zone: "South",
+      rating: 4.5,
+      awardWinner: true,
+      awardTitle: "Best Puja 2010 (NDTV)",
+      description: "Badamtala Ashar Sangha is known for its award-winning themes and detailed idol artwork.",
+      history: "The puja gained city-wide fame after winning major awards and is now a must-visit in the Kalighat area."
+    },
+    "Ballygunj cultural": {
+      zone: "South",
+      rating: 4.1,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Ballygunge Cultural Association organises a high-profile puja with elegant decor and cultural programmes.",
+      history: "Located in an upscale area, this puja often hosts performances and sees footfall from many celebrities."
+    },
+    "Chaltabagan": {
+      zone: "Central",
+      rating: 4.2,
+      awardWinner: true,
+      awardTitle: "Creative Theme Award 2021",
+      description: "Chaltabagan Durga Puja is a central Kolkata favourite, known for bright lighting and thematic presentation.",
+      history: "The club has experimented with eco-friendly themes in recent years, drawing attention from media and visitors alike."
+    },
+    "Deshapriya park": {
+      zone: "South",
+      rating: 4.6,
+      awardWinner: true,
+      awardTitle: "Mega Idol Record 2015",
+      description: "Deshapriya Park once hosted one of the tallest Durga idols in the city, drawing massive crowds.",
+      history: "This puja is held in an open ground and is known for large-scale pandal structures and spacious viewing areas."
+    },
+    "Ekdalia Evergreen": {
+      zone: "South",
+      rating: 4.7,
+      awardWinner: true,
+      awardTitle: "Best Crowd Favourite 2019",
+      description: "Ekdalia Evergreen is famous for its replica temples and grand traditional styling.",
+      history: "Over decades, it has recreated many famous Indian temples, making it a major attraction every year."
+    },
+    "FD Block Saltlake": {
+      zone: "Salt Lake",
+      rating: 4.0,
+      awardWinner: false,
+      awardTitle: "",
+      description: "FD Block in Salt Lake hosts a planned residential-block puja with clean, organised surroundings.",
+      history: "Local residents of the block collectively manage this puja with a strong community feeling."
+    },
+    "Hatibagan": {
+      zone: "North",
+      rating: 4.1,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Hatibagan Sarbojanin is located near a busy market area and is known for its lively ambience.",
+      history: "The puja blends market hustle with festive spirit, attracting shoppers and pandal hoppers alike."
+    },
+    "Hindusthan Park Sarbojanin": {
+      zone: "South",
+      rating: 4.3,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Hindusthan Park puja creates artistic themes around the central park space in the locality.",
+      history: "It is a popular stop in the 'South Kolkata puja trail' with a strong neighbourhood participation."
+    },
+    "Jodhpur park": {
+      zone: "South",
+      rating: 4.6,
+      awardWinner: true,
+      awardTitle: "Innovative Theme Award 2018",
+      description: "Jodhpur Park Durga Puja is known for its large-scale artistic themes and heavy footfall.",
+      history: "The puja has built a reputation for experimenting with materials and installation-style pandals."
+    },
+    "Kashi Bose lane": {
+      zone: "North",
+      rating: 4.2,
+      awardWinner: true,
+      awardTitle: "Artistic Installation Award 2020",
+      description: "Kashi Bose Lane presents intimate but highly creative pandals in narrow lanes of North Kolkata.",
+      history: "Young artists often collaborate with this puja for experimental and thought-provoking themes."
+    },
+    "Kamartuli park sarbojanin": {
+      zone: "North",
+      rating: 4.4,
+      awardWinner: true,
+      awardTitle: "Best Idol 2017",
+      description: "Kumartuli Park Sarbojanin is held in the idol-makers' hub, showcasing artistic excellence.",
+      history: "Surrounded by idol workshops, this puja highlights the craftsmanship of Kumartuli artisans."
+    },
+    "Laboni Estate": {
+      zone: "Salt Lake",
+      rating: 3.9,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Laboni Estate puja is a residential complex-based celebration with neat, simple pandals.",
+      history: "Residents organise cultural events and community feasts as part of the festivities."
+    },
+    "Mudiali": {
+      zone: "South",
+      rating: 4.5,
+      awardWinner: true,
+      awardTitle: "Environment Friendly Award 2013",
+      description: "Mudiali Club Puja is known for its greenery and eco-conscious themes.",
+      history: "Set near a waterbody, the puja often emphasises environmental awareness through its design."
+    },
+    "Naba Durga": {
+      zone: "Central",
+      rating: 3.8,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Naba Durga is a mid-sized puja that focuses on devotional ambience over crowd-pulling themes.",
+      history: "It has gradually grown with the neighbourhood, maintaining a homely vibe."
+    },
+    "Nalin sarkar street": {
+      zone: "North",
+      rating: 4.0,
+      awardWinner: true,
+      awardTitle: "Theme Excellence 2016",
+      description: "Nalin Sarkar Street is well-known for its compact but high-quality theme execution.",
+      history: "The narrow-lane puja creates immersive experiences within a small physical space."
+    },
+    "Pathuriaghata Pacher pally": {
+      zone: "North",
+      rating: 3.9,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Pathuriaghata Pacher Pally is a traditional North Kolkata para puja with warm local involvement.",
+      history: "The puja retains old Kolkata flavours in both rituals and decorations."
+    },
+    "Shib Mandir": {
+      zone: "South",
+      rating: 4.1,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Shib Mandir puja is held near a well-known temple area and draws steady neighbourhood crowds.",
+      history: "The puja blends temple rituals with community celebrations around the Durga idol."
+    },
+    "Telenga bagan": {
+      zone: "Central",
+      rating: 3.7,
+      awardWinner: false,
+      awardTitle: "",
+      description: "Telenga Bagan is a busy market-side puja with vibrant lighting and simple pandal design.",
+      history: "It is popular with daily commuters and locals looking for quick darshan."
+    },
+    "Tridhara Sammilani": {
+      zone: "South",
+      rating: 4.7,
+      awardWinner: true,
+      awardTitle: "Multiple City Awards",
+      description: "Tridhara Sammilani is one of the most talked about South Kolkata pujas with iconic themes every year.",
+      history: "Situated at the junction of three roads, it blends three neighbourhoods – hence the name 'Tridhara'."
+    },
+    "Singhi park": {
+      zone: "South",
+      rating: 4.3,
+      awardWinner: true,
+      awardTitle: "Classical Puja Recognition",
+      description: "Singhi Park is known for its classical music concerts and traditional ambiance.",
+      history: "For decades, it has attracted music lovers during the puja evenings."
+    }
+  };
+// Storage for coords & markers
+  let featureCoords = {};  // name -> [lon, lat]
+  let markers = {};        // name -> marker
+
+  // Carousel globals
+  let carouselImages = [];
+  let carouselIndex = 0;
+  let carouselIntervalId = null;
+
+  const locationSelect = document.getElementById("locationSelect");
+  const searchBox = document.getElementById("searchBox");
+  const zoneFilter = document.getElementById("zoneFilter");
+  const ratingFilter = document.getElementById("ratingFilter");
+  const awardFilter = document.getElementById("awardFilter");
+
+  const infoTitle = document.getElementById("infoTitle");
+  const infoMeta = document.getElementById("infoMeta");
+  const infoDesc = document.getElementById("infoDesc");
+  const infoHistory = document.getElementById("infoHistory");
+  const carouselImage = document.getElementById("carouselImage");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
     fetch('data.geojson')
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.json();
-      })
-      .then(data => {
-        // Add points as Leaflet markers (no popups)
-        L.geoJSON(data, {
-          pointToLayer: function(feature, latlng) {
-            return L.marker(latlng, {
-              icon: L.icon({
-                iconUrl: "dugga1.png",
-                iconSize: [25, 41],
-                iconAnchor: [12, 41]
-              })
-            }).bindPopup(`<b>${feature.properties.Name || "No Name"}</b><br>
-            <img src="${imageMap[feature.properties.Name]}" width="200" style="border:1px solid #ccc; margin-top:5px;">`)
+      .then(r => r.json())
+    .then(data => {
+      // Populate dropdown + create markers
+      data.features.forEach(f => {
+        const name = f.properties.Name;
+        const coords = f.geometry.coordinates; // [lon, lat]
 
-          }
-        }).addTo(map);
-      })
-      .catch(err => console.error("WFS load error:", err));
-  </script>
+        featureCoords[name] = coords;
+
+        // Dropdown option
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        locationSelect.appendChild(opt);
+      });
+
+      // Add markers to map
+      L.geoJSON(data, {
+        pointToLayer: (feature, latlng) => {
+          const name = feature.properties.Name;
+
+          const marker = L.marker(latlng, {
+            icon: L.icon({
+              iconUrl: "dugga1.png",
+              iconSize: [25, 41],
+              iconAnchor: [12, 41]
+            })
+          }).bindPopup(`
+            <b>${name}</b><br>
+            <img src="${imageMap[name] || ""}" width="220">
+          `);
+
+          markers[name] = marker;
+
+          marker.on("click", () => {
+            handleSelection(name);
+          });
+
+          return marker;
+        }
+      }).addTo(map);
+
+      // Initial carousel image (blank if none)
+      carouselImage.src = "";
+    });
+
+  // Filtering logic
+  function passesFilter(name) {
+    const info = pandalInfo[name];
+    if (!info) return true; // if no meta, don't block
+
+    const zVal = zoneFilter.value;
+    const rVal = ratingFilter.value;
+    const aVal = awardFilter.value;
+
+    // Zone filter
+    if (zVal !== "All" && info.zone !== zVal) return false;
+
+    // Rating filter
+    if (rVal !== "All") {
+      const minRating = parseFloat(rVal);
+      if (info.rating < minRating) return false;
+    }
+
+    // Award filter
+    if (aVal === "Yes" && !info.awardWinner) return false;
+    if (aVal === "No" && info.awardWinner) return false;
+
+    return true;
+  }
+
+  function applyFilters() {
+    // Filter markers & dropdown options
+    const options = locationSelect.options;
+
+    for (let i = 0; i < options.length; i++) {
+      const name = options[i].value;
+      if (!name) continue; // skip first placeholder
+
+      const show = passesFilter(name);
+
+      // Dropdown display
+      options[i].style.display = show ? "" : "none";
+
+      // Marker visibility
+      const marker = markers[name];
+      if (marker) {
+        if (show) {
+          if (!map.hasLayer(marker)) marker.addTo(map);
+        } else {
+          if (map.hasLayer(marker)) map.removeLayer(marker);
+        }
+      }
+    }
+  }
+
+  zoneFilter.addEventListener("change", applyFilters);
+  ratingFilter.addEventListener("change", applyFilters);
+  awardFilter.addEventListener("change", applyFilters);
+
+  // Selection handling
+  function handleSelection(name) {
+    if (!name || !featureCoords[name]) return;
+
+    const coords = featureCoords[name];
+    const lat = coords[1];
+    const lon = coords[0];
+
+    // Zoom map
+    map.setView([lat, lon], 17);
+
+    // Open popup
+    if (markers[name]) {
+      markers[name].openPopup();
+    }
+
+    // Update right information panel
+    updateInfoPanel(name);
+
+    // Sync dropdown & search
+    locationSelect.value = name;
+    searchBox.value = name;
+  }
+
+  // Update info panel contents
+  function updateInfoPanel(name) {
+    const info = pandalInfo[name] || {
+      zone: "-",
+      rating: "-",
+      awardWinner: false,
+      awardTitle: "",
+      description: "No sample description available.",
+      history: "No sample history available."
+    };
+
+    infoTitle.textContent = name;
+
+    infoMeta.innerHTML = `
+      <span>Zone: ${info.zone}</span>
+      <span>Rating: ${info.rating}</span>
+      <span>Award: ${info.awardWinner ? ("Yes (" + info.awardTitle + ")") : "No"}</span>
+    `;
+
+    infoDesc.textContent = info.description;
+    infoHistory.textContent = info.history;
+
+    // Set up carousel using same image multiple times (as requested)
+    const baseImage = imageMap[name] || "";
+    carouselImages = [baseImage, baseImage, baseImage];  // same image repeated
+    carouselIndex = 0;
+    updateCarouselImage();
+
+    // Restart slideshow interval
+    if (carouselIntervalId) {
+      clearInterval(carouselIntervalId);
+    }
+    carouselIntervalId = setInterval(() => {
+      nextImage();
+    }, 3000);
+  }
+
+  function updateCarouselImage() {
+    if (!carouselImages.length) {
+      carouselImage.src = "";
+      return;
+    }
+    carouselImage.src = carouselImages[carouselIndex];
+  }
+
+  function nextImage() {
+    if (!carouselImages.length) return;
+    carouselIndex = (carouselIndex + 1) % carouselImages.length;
+    updateCarouselImage();
+  }
+
+  function prevImage() {
+    if (!carouselImages.length) return;
+    carouselIndex = (carouselIndex - 1 + carouselImages.length) % carouselImages.length;
+    updateCarouselImage();
+  }
+
+  nextBtn.addEventListener("click", () => {
+    nextImage();
+    if (carouselIntervalId) {
+      clearInterval(carouselIntervalId);
+      carouselIntervalId = setInterval(nextImage, 3000);
+    }
+  });
+
+  prevBtn.addEventListener("click", () => {
+    prevImage();
+    if (carouselIntervalId) {
+      clearInterval(carouselIntervalId);
+      carouselIntervalId = setInterval(nextImage, 3000);
+    }
+  });
+
+  // Dropdown change
+  locationSelect.addEventListener("change", function () {
+    const name = this.value;
+    if (name) handleSelection(name);
+  });
+
+  // Search – first matching name that passes current filter
+  searchBox.addEventListener("keyup", function () {
+    const text = this.value.toLowerCase().trim();
+    if (!text) return;
+
+    for (const name in featureCoords) {
+      if (name.toLowerCase().includes(text) && passesFilter(name)) {
+        handleSelection(name);
+        break;
+      }
+    }
+  });
+</script>
 </body>
 </html>
-
-
-
-
