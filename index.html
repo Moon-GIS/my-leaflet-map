@@ -512,25 +512,27 @@ const imageMap = {
 
   });
 
-  function highlightNearestRoad(clickedLatLng){
+ function highlightConnectedRoads(clickedLatLng){
 
   if(!allRoads) return;
 
-  let nearestFeature = null;
-  let minDist = Infinity;
+  const tolerance = 5; // meters (you can increase to 10 if needed)
 
+  let connected = new Set();
+  let toCheck = [];
+
+  // STEP 1: Find roads near clicked point
   allRoads.features.forEach(road => {
 
     road.geometry.coordinates.forEach(line => {
 
       line.forEach(coord => {
 
-        const roadPoint = L.latLng(coord[1], coord[0]);
-        const d = clickedLatLng.distanceTo(roadPoint);
+        const pt = L.latLng(coord[1], coord[0]);
 
-        if(d < minDist){
-          minDist = d;
-          nearestFeature = road;   // full MultiLineString
+        if(clickedLatLng.distanceTo(pt) <= tolerance){
+          connected.add(road);
+          toCheck.push(road);
         }
 
       });
@@ -539,17 +541,60 @@ const imageMap = {
 
   });
 
+  // STEP 2: Find all roads connected to those roads
+  while(toCheck.length > 0){
+
+    const currentRoad = toCheck.pop();
+
+    allRoads.features.forEach(road => {
+
+      if(connected.has(road)) return;
+
+      if(roadsTouch(currentRoad, road, tolerance)){
+        connected.add(road);
+        toCheck.push(road);
+      }
+
+    });
+
+  }
+
+  // Remove old highlight
   if(roadHighlightLayer){
     map.removeLayer(roadHighlightLayer);
   }
 
-  roadHighlightLayer = L.geoJSON(nearestFeature,{
+  // Show ALL connected roads
+  roadHighlightLayer = L.geoJSON([...connected],{
     style:{
       color:"red",
-      weight:5
+      weight:4
     }
   }).addTo(map);
 
+}
+function roadsTouch(roadA, roadB, tolerance){
+
+  for(let lineA of roadA.geometry.coordinates){
+    for(let coordA of lineA){
+
+      const ptA = L.latLng(coordA[1], coordA[0]);
+
+      for(let lineB of roadB.geometry.coordinates){
+        for(let coordB of lineB){
+
+          const ptB = L.latLng(coordB[1], coordB[0]);
+
+          if(ptA.distanceTo(ptB) <= tolerance){
+            return true;
+          }
+
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 
@@ -660,7 +705,7 @@ const imageMap = {
     locationSelect.value = name;
     searchBox.value = name;
 
-    highlightNearestRoad(L.latLng(lat, lon));
+    highlightConnectedRoads(L.latLng(lat, lon));
   }
 
   // Update info panel contents
@@ -757,6 +802,7 @@ const imageMap = {
 </script>
 </body>
 </html>
+
 
 
 
