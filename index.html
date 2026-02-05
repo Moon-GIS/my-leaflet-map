@@ -510,7 +510,7 @@ const imageMap = {
 
   if(!allRoads) return;
 
-  let nearestRoad = null;
+  let nearestFeature = null;
   let minDist = Infinity;
 
   allRoads.features.forEach(road => {
@@ -520,12 +520,11 @@ const imageMap = {
       line.forEach(coord => {
 
         const roadPoint = L.latLng(coord[1], coord[0]);
-
         const d = clickedLatLng.distanceTo(roadPoint);
 
         if(d < minDist){
           minDist = d;
-          nearestRoad = road;
+          nearestFeature = road;   // full MultiLineString
         }
 
       });
@@ -538,12 +537,13 @@ const imageMap = {
     map.removeLayer(roadHighlightLayer);
   }
 
-  roadHighlightLayer = L.geoJSON(nearestRoad, {
-    style: {
-      color: "red",
-      weight: 5
+  roadHighlightLayer = L.geoJSON(nearestFeature,{
+    style:{
+      color:"red",
+      weight:5
     }
   }).addTo(map);
+
 }
 
 
@@ -751,6 +751,7 @@ const imageMap = {
 </script>
 </body>
 </html>
+
 
 
 
