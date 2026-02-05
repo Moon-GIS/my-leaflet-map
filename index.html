@@ -457,6 +457,9 @@ const imageMap = {
   let featureCoords = {};  // name -> [lon, lat]
   let markers = {};        // name -> marker
 
+  let allRoads = null;
+  let roadHighlightLayer = null;
+
   // Carousel globals
   let carouselImages = [];
   let carouselIndex = 0;
@@ -492,6 +495,56 @@ const imageMap = {
         opt.textContent = name;
         locationSelect.appendChild(opt);
       });
+
+      fetch('Rabindra_Sarabor_rd.geojson')
+      .then(r => r.json())
+      .then(data => {
+
+      allRoads = data;
+
+      console.log("Roads loaded:", data.features.length);
+
+  });
+
+  function highlightNearestRoad(clickedLatLng){
+
+  if(!allRoads) return;
+
+  let nearestRoad = null;
+  let minDist = Infinity;
+
+  allRoads.features.forEach(road => {
+
+    road.geometry.coordinates.forEach(coord => {
+
+      const roadPoint = L.latLng(coord[1], coord[0]);
+
+      const d = clickedLatLng.distanceTo(roadPoint);
+
+      if(d < minDist){
+        minDist = d;
+        nearestRoad = road;
+      }
+
+    });
+
+  });
+
+  // Remove old highlight
+  if(roadHighlightLayer){
+    map.removeLayer(roadHighlightLayer);
+  }
+
+  // Draw new nearest road
+  roadHighlightLayer = L.geoJSON(nearestRoad, {
+    style: {
+      color: "red",
+      weight: 5,
+      opacity: 0.9
+    }
+  }).addTo(map);
+
+}
 
       // Add markers to map
       L.geoJSON(data, {
@@ -599,6 +652,8 @@ const imageMap = {
     // Sync dropdown & search
     locationSelect.value = name;
     searchBox.value = name;
+
+    highlightNearestRoad(latlng);
   }
 
   // Update info panel contents
@@ -695,3 +750,4 @@ const imageMap = {
 </script>
 </body>
 </html>
+
