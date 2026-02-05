@@ -501,6 +501,12 @@ const imageMap = {
       .then(data => {
 
       allRoads = data;
+        L.geoJSON(allRoads, {
+     style:{
+    color:"#555",
+    weight:2
+  }
+    }).addTo(map);
 
       console.log("Roads loaded:", data.features.length);
 
@@ -654,7 +660,7 @@ const imageMap = {
     locationSelect.value = name;
     searchBox.value = name;
 
-    highlightNearestRoad(latlng);
+    highlightNearestRoad(L.latLng(lat, lon));
   }
 
   // Update info panel contents
@@ -751,6 +757,7 @@ const imageMap = {
 </script>
 </body>
 </html>
+
 
 
 
