@@ -515,34 +515,37 @@ const imageMap = {
 
   allRoads.features.forEach(road => {
 
-    road.geometry.coordinates.forEach(coord => {
+    road.geometry.coordinates.forEach(line => {
 
-      const roadPoint = L.latLng(coord[1], coord[0]);
+      line.forEach(coord => {
 
-      const d = clickedLatLng.distanceTo(roadPoint);
+        const roadPoint = L.latLng(coord[1], coord[0]);
 
-      if(d < minDist){
-        minDist = d;
-        nearestRoad = road;
-      }
+        const d = clickedLatLng.distanceTo(roadPoint);
+
+        if(d < minDist){
+          minDist = d;
+          nearestRoad = road;
+        }
+
+      });
 
     });
 
   });
 
-  // Remove old highlight
   if(roadHighlightLayer){
     map.removeLayer(roadHighlightLayer);
   }
 
-  // Draw new nearest road
   roadHighlightLayer = L.geoJSON(nearestRoad, {
     style: {
       color: "red",
-      weight: 5,
-      opacity: 0.9
+      weight: 5
     }
   }).addTo(map);
+}
+
 
 }
 
@@ -750,4 +753,5 @@ const imageMap = {
 </script>
 </body>
 </html>
+
 
